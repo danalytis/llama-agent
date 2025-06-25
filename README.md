@@ -1,5 +1,5 @@
 # llama-agent
-A Python-based agentic code script that leverages LLaMA to automate file management, content retrieval, Python execution, and code refactoring within any directory.
+A Python-based agentic code script that leverages local LLMs using ollama to automate file management, content retrieval, Python execution, and code refactoring within any directory.
 
 Based on concepts from [Boot.Dev](https://boot.dev)'s guided [course](https://www.boot.dev/courses/build-ai-agent-python)
 
