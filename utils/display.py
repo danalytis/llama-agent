@@ -135,6 +135,7 @@ def format_help_text(rich_enabled: bool = True) -> None:
   /help               - Show this help message
   /listmodels         - List all available Ollama models
   /model <name>       - Switch to a different model
+  /prompt             - List view and change system_prompts
   /clear              - Clear conversation history
   /verbose            - Toggle verbose mode on/off
   /syntax             - Toggle syntax highlighting on/off
@@ -258,3 +259,39 @@ def print_models_plain(models: List[str], current_model: str) -> None:
     for model in models:
         indicator = " ← current" if model == current_model else ""
         print(f"  - {model}{indicator}")
+# Add this function to your existing display.py file
+
+def print_prompts_table(
+    prompts_info: List[Tuple[str, str, int]], current_prompt: str, rich_enabled: bool = True
+) -> None:
+    """Print available prompts as a table"""
+    if rich_enabled and RICH_ENABLED and console:
+        try:
+            table = Table(
+                title="📝 Available System Prompts", width=get_terminal_width() - 4
+            )
+            table.add_column("Name", style="cyan", no_wrap=False, width=15)
+            table.add_column("Preview", style="white", no_wrap=False)
+            table.add_column("Size", style="green", width=10)
+            table.add_column("Status", style="yellow", width=10)
+
+            for name, preview, size in prompts_info:
+                status = "← current" if name == current_prompt else ""
+                size_str = f"{size} chars"
+                table.add_row(f"📄 {name}", preview, size_str, status)
+
+            console.print(table)
+        except Exception:
+            print_prompts_plain(prompts_info, current_prompt)
+    else:
+        print_prompts_plain(prompts_info, current_prompt)
+
+
+def print_prompts_plain(prompts_info: List[Tuple[str, str, int]], current_prompt: str) -> None:
+    """Print prompts without rich formatting"""
+    print("📝 Available System Prompts:")
+    print("-" * 80)
+    for name, preview, size in prompts_info:
+        indicator = " ← current" if name == current_prompt else ""
+        print(f"📄 {name:<15} | {preview[:50]:<50} | {size} chars{indicator}")
+    print("-" * 80)
